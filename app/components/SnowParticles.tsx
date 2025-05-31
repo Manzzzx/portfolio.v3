@@ -14,7 +14,7 @@ type SnowParticlesProps = {
 };
 
 export default function SnowParticles({
-  snowflakeCount = 50,
+  snowflakeCount = 10,
   colors = ["#E3F4FE", "#F8FAFC"],
   minSize = 1.5,
   maxSize = 4,
@@ -53,7 +53,7 @@ export default function SnowParticles({
         ctx.arc(flake.x, flake.y, flake.r, 0, Math.PI * 2);
         ctx.fillStyle = flake.color;
         ctx.shadowColor = flake.color;
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = 2;
         ctx.fill();
         ctx.shadowBlur = 0;
       }
