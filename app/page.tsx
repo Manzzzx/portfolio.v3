@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 import { BackgroundBeamsWithCollision } from "./components/ui/background-beams-with-collision";
 import { SpotlightText } from "./components/SpotlightText";
 import SkillsGrid from "./components/SkillsGrid";
+import AboutMeSection from "./components/AboutSection";
 
 export default function Home() {
   return (
@@ -29,8 +30,10 @@ export default function Home() {
         <section className="min-h-screen flex flex-col items-center justify-center w-full space-y-3">
           <SpotlightText />
         </section>
+        {/* About Me Section */}
+        <AboutMeSection />
         {/* Skills Section */}
-        <section className="min-h-screen w-full flex flex-col items-center justify-center">
+        <section className="min-h-screen w-full flex flex-col items-center justify-center pt-24">
           <h2 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-cyan-100 to-white tracking-tight mb-8">
             Skills
           </h2>
