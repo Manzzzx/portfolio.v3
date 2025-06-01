@@ -1,138 +1,173 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { FaCode, FaHome, FaChartBar } from "react-icons/fa";
 import { TiMessages } from "react-icons/ti";
 
-const NAV_COLOR = "#b7d6f7"; // Soft icy blue
-const NAV_BORDER = "#8DD8FF"; // Light blue border
-const NAV_ACTIVE_LINE = "#b7e3ff"; // Icy blue underline
+// Constants
+const THEME = {
+  colors: {
+    nav: "#b7d6f7",
+    border: "#8DD8FF",
+    activeLine: "#b7e3ff",
+    background: "#1a2333/60",
+  },
+  breakpoints: {
+    mobile: 640,
+  },
+} as const;
+
+const MENU_ITEMS = [
+  { name: "Home", href: "/", icon: FaHome },
+  { name: "Projects", href: "/projects", icon: FaCode },
+  { name: "Stats", href: "/#stats", icon: FaChartBar },
+  { name: "Social", href: "/#social", icon: TiMessages },
+] as const;
+
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [activeItem, setActiveItem] = useState("Home");
+  const [activeItem, setActiveItem] = useState<string>("Home");
+  const [show, setShow] = useState(false);
   const pathname = usePathname();
-  const [show, setShow] = useState(false); // Set default ke false
 
-  const menuItems = [
-    { name: "Home", href: "/", icon: FaHome },
-    { name: "Projects", href: "/projects", icon: FaCode },
-    { name: "Stats", href: "/#stats", icon: FaChartBar },
-    { name: "Social", href: "/#social", icon: TiMessages },
-  ];
-
-  // Effect untuk menangani scroll di halaman utama
-  useEffect(() => {
-    if (pathname !== "/") {
-      setShow(true);
-      return;
-    }
+  // Optimized scroll handler with throttling
+  const handleScroll = useCallback(() => {
+    const scrollY = window.scrollY;
+    const isScrolled = scrollY > 10;
     
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 10;
-      if (isScrolled !== scrolled) {
-        setScrolled(isScrolled);
-      }
-      
-      // Logika untuk halaman utama
-      const skillSection = document.getElementById('skills') || document.querySelector('section:nth-child(3)');
+    if (isScrolled !== scrolled) {
+      setScrolled(isScrolled);
+    }
+
+    // Show navbar logic for home page
+    if (pathname === "/") {
+      const skillSection = document.getElementById('skills');
       
       if (skillSection) {
-        // Dapatkan posisi skill section dari atas halaman
-        const skillSectionTop = skillSection.getBoundingClientRect().top;
-        
-        // Navbar muncul saat skill section mendekati viewport
-        // Gunakan persentase viewport height untuk konsistensi di berbagai perangkat
+        const rect = skillSection.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
-        setShow(skillSectionTop < viewportHeight * 0.8);
+        const shouldShow = rect.top < viewportHeight * 0.8;
+        setShow(shouldShow);
       } else {
-        // Fallback jika skill section tidak ditemukan
-        // Gunakan persentase scroll yang lebih kecil untuk mobile
-        const documentHeight = document.body.scrollHeight;
-        const scrollPercentage = (window.scrollY / (documentHeight - window.innerHeight)) * 100;
-        setShow(scrollPercentage > 40); // Muncul setelah scroll 40% halaman
+        // Fallback: show after 25% scroll
+        const documentHeight = document.documentElement.scrollHeight;
+        const windowHeight = window.innerHeight;
+        const scrollPercentage = scrollY / (documentHeight - windowHeight);
+        setShow(scrollPercentage > 0.25);
       }
-    };
-    
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    } else {
+      setShow(true);
+    }
   }, [pathname, scrolled]);
+
+  // Scroll event listener with cleanup
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
+    const throttledHandleScroll = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(handleScroll, 16); // ~60fps
+    };
+
+    handleScroll(); // Initial call
+    window.addEventListener("scroll", throttledHandleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener("scroll", throttledHandleScroll);
+      clearTimeout(timeoutId);
+    };
+  }, [handleScroll]);
 
   // Sync active menu with URL
   useEffect(() => {
-    const found = menuItems.find(item => {
-      // Support both / and /#anchor
+    const activeMenuItem = MENU_ITEMS.find(item => {
       if (item.href === "/") return pathname === "/";
-      return pathname.startsWith(item.href.replace("#", ""));
+      return pathname.startsWith(item.href.replace("/#", "/"));
     });
-    if (found) setActiveItem(found.name);
+    
+    if (activeMenuItem) {
+      setActiveItem(activeMenuItem.name);
+    }
   }, [pathname]);
+
+  const handleMenuClick = useCallback((itemName: string) => {
+    setActiveItem(itemName);
+  }, []);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, itemName: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setActiveItem(itemName);
+    }
+  }, []);
 
   return (
     <AnimatePresence>
       {show && (
-        <motion.div
+        <motion.nav
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className={cn(
-            "fixed bottom-0 left-1/2 transform -translate-x-1/2 z-50 mb-8 w-auto"
-          )}
-          style={{}}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 w-auto max-w-[calc(100vw-2rem)]"
+          role="navigation"
+          aria-label="Main navigation"
         >
           <div
-            className={
-              `px-3 py-1 flex items-center justify-center space-x-4 rounded-2xl border shadow-lg max-w-full bg-[#1a2333]/60 backdrop-blur-md`
-            }
+            className={cn(
+              "px-3 py-2 flex items-center justify-center space-x-2 sm:space-x-4",
+              "rounded-2xl border shadow-lg backdrop-blur-md",
+              "bg-[#1a2333]/60"
+            )}
             style={{
-              minWidth: 0,
-              borderColor: NAV_BORDER,
-              background: undefined,
-              boxShadow: "0 2px 16px 0 #00000020"
+              borderColor: THEME.colors.border,
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
             }}
           >
-            <div className="flex items-center space-x-4 sm:space-x-2 overflow-x-auto no-scrollbar min-w-0 max-w-[calc(100vw-4rem)]">
-              {menuItems.map((item) => {
+            <div className="flex items-center space-x-1 sm:space-x-2 overflow-x-auto no-scrollbar">
+              {MENU_ITEMS.map((item) => {
                 const isActive = activeItem === item.name;
+                const Icon = item.icon;
+                
                 return (
                   <motion.a
                     key={item.name}
                     href={item.href}
                     tabIndex={0}
-                    aria-label={item.name}
-                    onClick={() => setActiveItem(item.name)}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' || e.key === ' ') setActiveItem(item.name);
-                    }}
+                    role="menuitem"
+                    aria-label={`Navigate to ${item.name}`}
+                    aria-current={isActive ? "page" : undefined}
+                    onClick={() => handleMenuClick(item.name)}
+                    onKeyDown={(e) => handleKeyDown(e, item.name)}
                     className={cn(
                       "relative flex flex-col items-center justify-center group",
-                      isActive ? "" : "hover:opacity-80"
+                      "transition-all duration-200 rounded-lg p-2",
+                      "focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50",
+                      isActive ? "" : "hover:opacity-80 hover:bg-white/5"
                     )}
-                    style={{ color: isActive ? NAV_ACTIVE_LINE : NAV_COLOR }}
+                    style={{ 
+                      color: isActive ? THEME.colors.activeLine : THEME.colors.nav,
+                      minWidth: "40px",
+                      minHeight: "40px"
+                    }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <span
-                      className={cn(
-                        "flex items-center justify-center transition-all duration-200",
-                        ""
-                      )}
-                      style={{ width: 44, height: 44 }}
-                    >
-                      <item.icon size={20} />
-                    </span>
+                    <Icon size={18} className="sm:text-xl" />
+                    
                     <AnimatePresence>
                       {isActive && (
                         <motion.div
                           layoutId="activeItemLine"
-                          className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-10 h-1.5 rounded bg-[#b7e3ff] shadow"
-                          initial={{ opacity: 0, scaleX: 0.7 }}
+                          className="absolute left-1/2 -translate-x-1/2 -bottom-0.5 w-6 h-1 rounded-full"
+                          style={{ backgroundColor: THEME.colors.activeLine }}
+                          initial={{ opacity: 0, scaleX: 0.5 }}
                           animate={{ opacity: 1, scaleX: 1 }}
-                          exit={{ opacity: 0, scaleX: 0.7 }}
-                          transition={{ duration: 0.18 }}
+                          exit={{ opacity: 0, scaleX: 0.5 }}
+                          transition={{ duration: 0.2, ease: "easeOut" }}
                         />
                       )}
                     </AnimatePresence>
@@ -141,7 +176,7 @@ const Navbar = () => {
               })}
             </div>
           </div>
-        </motion.div>
+        </motion.nav>
       )}
     </AnimatePresence>
   );
