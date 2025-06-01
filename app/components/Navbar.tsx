@@ -8,37 +8,59 @@ import { FaCode, FaHome, FaChartBar } from "react-icons/fa";
 import { TiMessages } from "react-icons/ti";
 
 const NAV_COLOR = "#b7d6f7"; // Soft icy blue
-const NAV_ACTIVE_BG = "#e6f6ffcc"; // Frosty white-blue with opacity
 const NAV_BORDER = "#8DD8FF"; // Light blue border
-const NAV_GRAD_FROM = "#e6f6ff"; // Lighter blue
-const NAV_GRAD_TO = "#b7d6f7"; // Slightly deeper blue
 const NAV_ACTIVE_LINE = "#b7e3ff"; // Icy blue underline
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [activeItem, setActiveItem] = useState("Home");
   const pathname = usePathname();
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false); // Set default ke false
 
   const menuItems = [
     { name: "Home", href: "/", icon: FaHome },
-    { name: "Code", href: "/#projects", icon: FaCode },
+    { name: "Projects", href: "/projects", icon: FaCode },
     { name: "Stats", href: "/#stats", icon: FaChartBar },
     { name: "Social", href: "/#social", icon: TiMessages },
   ];
 
+  // Effect untuk menangani scroll di halaman utama
   useEffect(() => {
+    if (pathname !== "/") {
+      setShow(true);
+      return;
+    }
+    
     const handleScroll = () => {
       const isScrolled = window.scrollY > 10;
       if (isScrolled !== scrolled) {
         setScrolled(isScrolled);
       }
-      // Show navbar only after scrolling past hero section (min-h-screen)
-      setShow(window.scrollY > 10);
+      
+      // Logika untuk halaman utama
+      const skillSection = document.getElementById('skills') || document.querySelector('section:nth-child(3)');
+      
+      if (skillSection) {
+        // Dapatkan posisi skill section dari atas halaman
+        const skillSectionTop = skillSection.getBoundingClientRect().top;
+        
+        // Navbar muncul saat skill section mendekati viewport
+        // Gunakan persentase viewport height untuk konsistensi di berbagai perangkat
+        const viewportHeight = window.innerHeight;
+        setShow(skillSectionTop < viewportHeight * 0.8);
+      } else {
+        // Fallback jika skill section tidak ditemukan
+        // Gunakan persentase scroll yang lebih kecil untuk mobile
+        const documentHeight = document.body.scrollHeight;
+        const scrollPercentage = (window.scrollY / (documentHeight - window.innerHeight)) * 100;
+        setShow(scrollPercentage > 40); // Muncul setelah scroll 40% halaman
+      }
     };
+    
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [scrolled]);
+  }, [pathname, scrolled]);
 
   // Sync active menu with URL
   useEffect(() => {
@@ -74,7 +96,7 @@ const Navbar = () => {
               boxShadow: "0 2px 16px 0 #00000020"
             }}
           >
-            <div className="flex items-center space-x-4 sm:space-x-2 overflow-x-auto no-scrollbar min-w-0">
+            <div className="flex items-center space-x-4 sm:space-x-2 overflow-x-auto no-scrollbar min-w-0 max-w-[calc(100vw-4rem)]">
               {menuItems.map((item) => {
                 const isActive = activeItem === item.name;
                 return (
@@ -125,4 +147,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar; 
+export default Navbar;

@@ -14,7 +14,7 @@ type SnowParticlesProps = {
 };
 
 export default function SnowParticles({
-  snowflakeCount = 10,
+  snowflakeCount = 20,
   colors = ["#E3F4FE", "#F8FAFC"],
   minSize = 1.5,
   maxSize = 4,

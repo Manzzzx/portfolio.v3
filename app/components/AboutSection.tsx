@@ -76,7 +76,7 @@ export const TextGenerateEffect = ({
 export default function AboutMeSection() {
   const paragraph1 = `I'm just a college student with a weird hobby of building websites that sometimes confuse people (but that's what makes it fun, right?). As someone who is still in the "learning by breaking things" phase, I love experimenting with code until I accidentally create something completely different from my original plan - but that's what makes it unexpected and interesting!(｡♥‿♥｡)`;
 
-  const paragraph2 = `My coding world is dominated by JavaScript and TypeScript (because who doesn’t love dynamic typing that sometimes causes panic in production? ಥ_ಥ). For building websites, I rely on the killer combination of Next.js and Tailwind CSS - because who has time to write CSS from scratch these days? Occasionally, I also play around with Next.js or Express.js for the backend stuff. Fun fact: 70% of my coding time is spent asking AI “why isn’t this working” and the remaining 30% is celebrating when it finally does! (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧`;
+  const paragraph2 = `My coding world is dominated by JavaScript and TypeScript (because who doesn’t love dynamic typing that sometimes causes panic in production? ಥ_ಥ). For building websites, I rely on the killer combination of Next.js and Tailwind CSS - because who has time to write CSS from scratch these days? Fun fact: 90% of my coding time is spent asking AI “why isn’t this working” and the remaining 10% is celebrating when it finally does! (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧`;
 
   return (
     <section className="w-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 pb-8">
@@ -101,7 +101,7 @@ export default function AboutMeSection() {
             words={paragraph2}
             duration={0.4}
             filter={true}
-            delay={3500}
+            delay={4800}
           />
         </div>
       </div>
