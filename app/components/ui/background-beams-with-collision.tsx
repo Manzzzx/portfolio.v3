@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import React, { useRef, useState, useEffect, forwardRef } from "react";
 
 export const BackgroundBeamsWithCollision = forwardRef<HTMLDivElement, { children?: React.ReactNode; className?: string }>(
-  (props, ref) => {
+  (props, _ref) => {
     const { children, className } = props;
     const containerRef = useRef<HTMLDivElement>(null);
     const parentRef = useRef<HTMLDivElement>(null);
@@ -170,7 +170,7 @@ export const BackgroundBeamsWithCollision = forwardRef<HTMLDivElement, { childre
         repeatDelay?: number;
       };
     }
-  >(({ parentRef, containerRef, beamOptions = {} }, ref) => {
+  >(({ parentRef, containerRef, beamOptions = {} }, _ref) => {
     const beamRef = useRef<HTMLDivElement>(null);
     const [collision, setCollision] = useState<{
       detected: boolean;

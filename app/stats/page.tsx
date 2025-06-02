@@ -115,7 +115,7 @@ const StatCard = ({
   total 
 }: { 
   title: string; 
-  icon: any; 
+  icon: React.ComponentType<{ className?: string }>; 
   data: Record<string, number>; 
   total: number; 
 }) => {
