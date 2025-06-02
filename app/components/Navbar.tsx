@@ -23,10 +23,9 @@ const THEME = {
 const MENU_ITEMS = [
   { name: "Home", href: "/", icon: FaHome },
   { name: "Projects", href: "/projects", icon: FaCode },
-  { name: "Stats", href: "/#stats", icon: FaChartBar },
+  { name: "Stats", href: "/stats", icon: FaChartBar },
   { name: "Social", href: "/#social", icon: TiMessages },
 ] as const;
-
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -38,15 +37,15 @@ const Navbar = () => {
   const handleScroll = useCallback(() => {
     const scrollY = window.scrollY;
     const isScrolled = scrollY > 10;
-    
+
     if (isScrolled !== scrolled) {
       setScrolled(isScrolled);
     }
 
     // Show navbar logic for home page
     if (pathname === "/") {
-      const skillSection = document.getElementById('skills');
-      
+      const skillSection = document.getElementById("skills");
+
       if (skillSection) {
         const rect = skillSection.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
@@ -67,7 +66,7 @@ const Navbar = () => {
   // Scroll event listener with cleanup
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
-    
+
     const throttledHandleScroll = () => {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(handleScroll, 16); // ~60fps
@@ -75,7 +74,7 @@ const Navbar = () => {
 
     handleScroll(); // Initial call
     window.addEventListener("scroll", throttledHandleScroll, { passive: true });
-    
+
     return () => {
       window.removeEventListener("scroll", throttledHandleScroll);
       clearTimeout(timeoutId);
@@ -84,11 +83,11 @@ const Navbar = () => {
 
   // Sync active menu with URL
   useEffect(() => {
-    const activeMenuItem = MENU_ITEMS.find(item => {
+    const activeMenuItem = MENU_ITEMS.find((item) => {
       if (item.href === "/") return pathname === "/";
-      return pathname.startsWith(item.href.replace("/#", "/"));
+      return pathname && pathname.startsWith(item.href.replace("/#", "/"));
     });
-    
+
     if (activeMenuItem) {
       setActiveItem(activeMenuItem.name);
     }
@@ -98,12 +97,15 @@ const Navbar = () => {
     setActiveItem(itemName);
   }, []);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent, itemName: string) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      setActiveItem(itemName);
-    }
-  }, []);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent, itemName: string) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setActiveItem(itemName);
+      }
+    },
+    []
+  );
 
   return (
     <AnimatePresence>
@@ -132,7 +134,7 @@ const Navbar = () => {
               {MENU_ITEMS.map((item) => {
                 const isActive = activeItem === item.name;
                 const Icon = item.icon;
-                
+
                 return (
                   <motion.a
                     key={item.name}
@@ -146,18 +148,19 @@ const Navbar = () => {
                     className={cn(
                       "relative flex flex-col items-center justify-center group",
                       "transition-all duration-200 rounded-lg p-2",
-                      "focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50",
-                      isActive ? "" : "hover:opacity-80 hover:bg-white/5"
+                      isActive
+                        ? "hover:bg-transparent hover:opacity-100"
+                        : "hover:opacity-80 hover:bg-white/5"
                     )}
-                    style={{ 
+                    style={{
                       color: isActive ? THEME.colors.activeLine : THEME.colors.nav,
                       minWidth: "40px",
-                      minHeight: "40px"
+                      minHeight: "40px",
                     }}
                     whileTap={{ scale: 0.95 }}
                   >
                     <Icon size={18} className="sm:text-xl" />
-                    
+
                     <AnimatePresence>
                       {isActive && (
                         <motion.div

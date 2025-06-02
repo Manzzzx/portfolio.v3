@@ -136,8 +136,8 @@ export const BackgroundBeamsWithCollision = forwardRef<HTMLDivElement, { childre
   
     return (
       <div ref={parentRef} className={cn("min-h-screen w-full bg-gradient-to-b from-[#10131a] to-[#05070a] relative flex items-center justify-center overflow-hidden", className)}>
-        {beams.map((beam) => (
-          <CollisionMechanism key={beam.initialX + "beam-idx"} beamOptions={beam} containerRef={containerRef} parentRef={parentRef} />
+        {beams.map((beam, idx) => (
+          <CollisionMechanism key={`beam-${idx}`} beamOptions={beam} containerRef={containerRef} parentRef={parentRef} />
         ))}
   
         {children}
@@ -271,13 +271,15 @@ export const BackgroundBeamsWithCollision = forwardRef<HTMLDivElement, { childre
   CollisionMechanism.displayName = "CollisionMechanism";
 
   const Explosion = ({ ...props }: React.HTMLProps<HTMLDivElement>) => {
-    const spans = Array.from({ length: 20 }, (_, index) => ({
-      id: index,
-      initialX: 0,
-      initialY: 0,
-      directionX: Math.floor(Math.random() * 80 - 40),
-      directionY: Math.floor(Math.random() * -50 - 10),
-    }));
+  const spans = React.useMemo(() =>
+  Array.from({ length: 20 }, (_, index) => ({
+    id: index,
+    initialX: 0,
+    initialY: 0,
+    directionX: Math.floor(Math.random() * 80 - 40),
+    directionY: Math.floor(Math.random() * -50 - 10),
+  })), []
+);
   
     return (
       <div {...props} className={cn("absolute z-50 h-2 w-2", props.className)}>

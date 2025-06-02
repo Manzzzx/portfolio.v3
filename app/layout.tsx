@@ -19,10 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Manzz Portfolio",
-  description: "Personal portfolio website showcasing my projects and skills",
-  viewport: "width=device-width, initial-scale=1",
-  themeColor: "#101c2c",
+  title: "マンヅ",
+  description: "Vibe Coder",
 };
 
 const Logo = () => (
