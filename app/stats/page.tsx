@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Clock, Code, Monitor, Layers, Award } from "lucide-react";
+import { Clock, Code, Monitor, Layers, Award, Snowflake } from "lucide-react";
 
 // Types
 type WakaTimeData = {
@@ -30,18 +30,18 @@ type AggregatedData = {
   total_seconds: number;
 };
 
-// Constants
+// Winter color palette
 const COLOR_PALETTE = [
-  "from-blue-500 to-blue-600",
-  "from-emerald-500 to-emerald-600",
-  "from-purple-500 to-purple-600",
-  "from-pink-500 to-pink-600",
-  "from-amber-500 to-amber-600",
-  "from-red-500 to-red-600",
-  "from-cyan-500 to-cyan-600",
-  "from-orange-500 to-orange-600",
-  "from-teal-500 to-teal-600",
-  "from-indigo-500 to-indigo-600",
+  "from-blue-400 to-blue-600",
+  "from-cyan-400 to-cyan-600", 
+  "from-teal-400 to-teal-600",
+  "from-purple-400 to-purple-600",
+  "from-slate-400 to-slate-600",
+  "from-sky-400 to-sky-600",
+  "from-blue-500 to-cyan-500",
+  "from-indigo-500 to-blue-500",
+  "from-cyan-500 to-teal-500",
+  "from-[#8dd8ff] to-[#5ab7d8]",
 ];
 
 // Utility Functions
@@ -61,27 +61,35 @@ const formatPercentage = (value: number, total: number): string => {
 
 // Components
 const LoadingSpinner = () => (
-  <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+  <div className="min-h-screen flex items-center justify-center">
     <div className="text-center">
-      <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-slate-300 animate-pulse">Loading WakaTime data...</p>
+      <div className="relative">
+        <div className="w-16 h-16 border-4 border-white/20 border-t-cyan-400 rounded-full animate-spin mx-auto mb-6"></div>
+        <Snowflake className="w-6 h-6 text-cyan-300 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse" />
+      </div>
+      <p className="text-white/80 text-lg font-medium">Loading WakaTime Analytics...</p>
+      <div className="flex justify-center gap-1 mt-4">
+        <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></div>
+        <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+        <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+      </div>
     </div>
   </div>
 );
 
 const ErrorMessage = ({ message }: { message: string }) => (
-  <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-    <div className="text-center max-w-md mx-auto p-6">
-      <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="text-center max-w-md mx-auto p-8">
+      <div className="w-20 h-20 bg-red-500/10 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 border border-red-400/20">
+        <svg className="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
-      <h2 className="text-xl font-semibold text-red-400 mb-2">Error</h2>
-      <p className="text-slate-300 mb-4">{message}</p>
+      <h2 className="text-2xl font-bold text-white mb-3">Something went wrong</h2>
+      <p className="text-white/70 mb-6 leading-relaxed">{message}</p>
       <button 
         onClick={() => window.location.reload()}
-        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+        className="px-6 py-3 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 rounded-xl transition-all duration-300 border border-cyan-400/20 hover:border-cyan-400/40 backdrop-blur-sm font-medium"
       >
         Try Again
       </button>
@@ -90,11 +98,13 @@ const ErrorMessage = ({ message }: { message: string }) => (
 );
 
 const ProgressBar = ({ percent, gradient }: { percent: number; gradient: string }) => (
-  <div className="w-full h-2 bg-slate-700/50 rounded-full overflow-hidden">
+  <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm">
     <div
-      className={`h-full bg-gradient-to-r ${gradient} transition-all duration-700 ease-out`}
+      className={`h-full bg-gradient-to-r ${gradient} transition-all duration-1000 ease-out rounded-full relative`}
       style={{ width: `${Math.min(percent, 100)}%` }}
-    />
+    >
+      <div className="absolute inset-0 bg-white/20 rounded-full animate-pulse"></div>
+    </div>
   </div>
 );
 
@@ -115,43 +125,46 @@ const StatCard = ({
 
   if (entries.length === 0) {
     return (
-      <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-slate-700/50 rounded-lg">
-            <Icon className="w-5 h-5 text-slate-300" />
+      <div className="bg-[#101c2c]/40 backdrop-blur-md rounded-2xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="p-3 bg-white/10 rounded-xl backdrop-blur-sm">
+            <Icon className="w-6 h-6 text-cyan-300" />
           </div>
-          <h2 className="text-lg font-semibold text-slate-200">{title}</h2>
+          <h2 className="text-xl font-bold text-white">{title}</h2>
         </div>
-        <p className="text-slate-400 text-center py-8">No data available</p>
+        <div className="text-center py-12">
+          <Snowflake className="w-12 h-12 text-white/30 mx-auto mb-4" />
+          <p className="text-white/60 text-lg">No data available</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50 hover:border-slate-600/50 transition-all duration-300">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-slate-700/50 rounded-lg">
-          <Icon className="w-5 h-5 text-slate-300" />
+    <div className="bg-[#101c2c]/40 backdrop-blur-md rounded-2xl p-8 border-2 border-[#8dd8ff]/60 hover:border-[#8dd8ff] transition-all duration-300 group">
+      <div className="flex items-center gap-4 mb-8">
+        <div className="p-3 bg-white/10 rounded-xl backdrop-blur-sm group-hover:bg-white/15 transition-colors">
+          <Icon className="w-6 h-6 text-cyan-300" />
         </div>
-        <h2 className="text-lg font-semibold text-slate-200">{title}</h2>
+        <h2 className="text-xl font-bold text-white">{title}</h2>
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-6">
         {entries.map(([name, seconds], index) => {
           const percent = (seconds / total) * 100;
           const gradient = COLOR_PALETTE[index % COLOR_PALETTE.length];
           
           return (
-            <div key={name} className="group">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-medium text-slate-200 group-hover:text-white transition-colors">
+            <div key={name} className="group/item">
+              <div className="flex items-center justify-between mb-3">
+                <span className="font-semibold text-white group-hover/item:text-cyan-200 transition-colors text-lg">
                   {name}
                 </span>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-slate-400">
+                <div className="flex items-center gap-3">
+                  <span className="text-white/80 font-medium">
                     {formatDuration(seconds)}
                   </span>
-                  <span className="text-xs text-slate-500 bg-slate-700/50 px-2 py-1 rounded-full">
+                  <span className="text-sm text-white/60 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm border border-white/10">
                     {formatPercentage(seconds, total)}
                   </span>
                 </div>
@@ -166,27 +179,30 @@ const StatCard = ({
 };
 
 const StatsOverview = ({ totalSeconds }: { totalSeconds: number }) => (
-  <div className="text-center mb-12">
-    <div className="inline-flex items-center gap-3 bg-slate-800/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50">
-      <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl">
-        <Clock className="w-8 h-8 text-white" />
+  <div className="text-center mb-16">
+    <div className="inline-flex items-center gap-6 bg-white/5 backdrop-blur-xl rounded-3xl p-10 border border-white/10 hover:border-white/20 transition-all duration-300 group">
+      <div className="p-4 bg-gradient-to-br from-cyan-400/20 to-blue-500/20 rounded-2xl backdrop-blur-sm border border-cyan-400/20 group-hover:scale-105 transition-transform duration-300">
+        <Clock className="w-12 h-12 text-cyan-300" />
       </div>
       <div className="text-left">
-        <p className="text-slate-400 text-sm font-medium uppercase tracking-wide">
-          Total Coding Time
-        </p>
-        <p className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+        <div className="flex items-center gap-2 mb-2">
+          <p className="text-white/70 text-sm font-semibold uppercase tracking-wider">
+            Total Coding Time
+          </p>
+          <Snowflake className="w-4 h-4 text-cyan-400 animate-spin" style={{animationDuration: '3s'}} />
+        </div>
+        <p className="text-5xl font-bold bg-gradient-to-r from-cyan-300 via-blue-300 to-indigo-300 bg-clip-text text-transparent mb-1">
           {formatDuration(totalSeconds)}
         </p>
-        <p className="text-slate-500 text-sm">
-          Last 7 days
+        <p className="text-white/60 text-sm font-medium">
+          Last 7 days of development
         </p>
       </div>
     </div>
   </div>
 );
 
-// Custom hook for data fetching
+// Custom hooks
 const useWakaTimeData = () => {
   const [summary, setSummary] = useState<WakaTimeSummary | null>(null);
   const [loading, setLoading] = useState(true);
@@ -195,35 +211,16 @@ const useWakaTimeData = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('🔄 Fetching data from /api/wakatime...');
         const response = await fetch("/api/wakatime");
-        
-        console.log('📡 Response status:', response.status);
         
         if (!response.ok) {
           const errorData = await response.json();
-          console.error('❌ API Error:', errorData);
           throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
-        console.log('✅ Data received:', data);
-        console.log('📊 Full data structure:', JSON.stringify(data, null, 2));
-        console.log('📊 Data keys:', Object.keys(data));
-        console.log('📊 Days count:', data.data?.length || 0);
-        
-        // Log sample data untuk debugging
-        if (data.data && data.data.length > 0) {
-          console.log('📈 Sample day data:', data.data[0]);
-        } else {
-          console.log('❌ No data.data or empty array');
-          console.log('❌ Typeof data:', typeof data);
-          console.log('❌ Is array?', Array.isArray(data));
-        }
-        
         setSummary(data);
       } catch (err) {
-        console.error('❌ Fetch error:', err);
         setError(err instanceof Error ? err.message : "Failed to fetch data");
       } finally {
         setLoading(false);
@@ -236,14 +233,9 @@ const useWakaTimeData = () => {
   return { summary, loading, error };
 };
 
-// Custom hook for data aggregation
 const useAggregatedData = (summary: WakaTimeSummary | null): AggregatedData => {
   return React.useMemo(() => {
-    console.log('🔄 Aggregating data...');
-    console.log('Summary:', summary);
-    
     if (!summary?.data?.length) {
-      console.log('❌ No summary data found');
       return {
         languages: {},
         editors: {},
@@ -253,33 +245,24 @@ const useAggregatedData = (summary: WakaTimeSummary | null): AggregatedData => {
       };
     }
 
-    console.log('📊 Processing', summary.data.length, 'days of data');
-
-    const result = summary.data.reduce<AggregatedData>(
-      (acc, day, index) => {
-        console.log(`📅 Day ${index + 1}:`, day.range?.date, 'Total:', day.grand_total?.total_seconds || 0);
-        
-        // Aggregate languages
+    return summary.data.reduce<AggregatedData>(
+      (acc, day) => {
         day.languages?.forEach(lang => {
           acc.languages[lang.name] = (acc.languages[lang.name] || 0) + lang.total_seconds;
         });
         
-        // Aggregate editors
         day.editors?.forEach(editor => {
           acc.editors[editor.name] = (acc.editors[editor.name] || 0) + editor.total_seconds;
         });
         
-        // Aggregate operating systems
         day.operating_systems?.forEach(os => {
           acc.operating_systems[os.name] = (acc.operating_systems[os.name] || 0) + os.total_seconds;
         });
         
-        // Aggregate categories
         day.categories?.forEach(category => {
           acc.categories[category.name] = (acc.categories[category.name] || 0) + category.total_seconds;
         });
         
-        // Add to total seconds
         acc.total_seconds += day.grand_total?.total_seconds || 0;
         
         return acc;
@@ -292,61 +275,44 @@ const useAggregatedData = (summary: WakaTimeSummary | null): AggregatedData => {
         total_seconds: 0,
       }
     );
-
-    console.log('✅ Aggregation complete:');
-    console.log('- Total seconds:', result.total_seconds);
-    console.log('- Languages:', Object.keys(result.languages).length);
-    console.log('- Editors:', Object.keys(result.editors).length);
-    console.log('- OS:', Object.keys(result.operating_systems).length);
-    console.log('- Categories:', Object.keys(result.categories).length);
-
-    return result;
   }, [summary]);
 };
 
 // Main component
-export default function StatsPage() {
+export default function WakaTimeAnalytics() {
   const { summary, loading, error } = useWakaTimeData();
   const aggregatedData = useAggregatedData(summary);
-
-  console.log('🎨 Render state:', { loading, error: !!error, hasData: !!summary });
 
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage message={error} />;
   if (!summary) return <ErrorMessage message="No data available" />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <div className="container mx-auto px-4 py-12">
+    <div className="min-h-screen">
+      <div className="container mx-auto px-6 py-16">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <Award className="w-8 h-8 text-blue-400" />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
+        <div className="text-center mb-16 sm:mb-20">
+          <div className="inline-flex items-center gap-3 mb-6">
+            <div className="p-2 bg-white/10 rounded-xl backdrop-blur-sm">
+              <Award className="w-10 h-10 text-cyan-300" />
+            </div>
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-white via-cyan-200 to-blue-200 bg-clip-text text-transparent">
               WakaTime Analytics
             </h1>
+            <div className="p-2 bg-white/10 rounded-xl backdrop-blur-sm">
+              <Snowflake className="w-10 h-10 text-blue-400 animate-spin" style={{animationDuration: '4s'}} />
+            </div>
           </div>
-          <p className="text-slate-400 text-lg">
-            Your coding activity insights for the past week
+          <p className="text-white/70 text-xl font-medium max-w-2xl mx-auto leading-relaxed">
+            Your comprehensive coding activity insights and development statistics
           </p>
-        </div>
-
-        {/* Debug Info */}
-        <div className="mb-8 p-4 bg-slate-800/30 rounded-lg border border-slate-700/50">
-          <h3 className="text-slate-300 font-semibold mb-2">Debug Info:</h3>
-          <div className="text-sm text-slate-400 space-y-1">
-            <p>Days loaded: {summary?.data?.length || 0}</p>
-            <p>Total seconds: {aggregatedData.total_seconds}</p>
-            <p>Languages: {Object.keys(aggregatedData.languages).length}</p>
-            <p>Editors: {Object.keys(aggregatedData.editors).length}</p>
-          </div>
         </div>
 
         {/* Overview */}
         <StatsOverview totalSeconds={aggregatedData.total_seconds} />
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-16">
           <StatCard
             title="Programming Languages"
             icon={Code}
@@ -374,17 +340,24 @@ export default function StatsPage() {
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-16 pt-8 border-t border-slate-700/50">
-          <p className="text-slate-500 text-sm">
-            Data powered by{" "}
-            <a 
-              href="https://wakatime.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-blue-400 hover:text-blue-300 transition-colors"
-            >
-              WakaTime
-            </a>
+        <div className="text-center pt-12 border-t border-white/10">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Snowflake className="w-5 h-5 text-cyan-400" />
+            <p className="text-white/60 text-lg font-medium">
+              Powered by{" "}
+              <a 
+                href="https://wakatime.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-cyan-300 hover:text-cyan-200 transition-colors font-semibold"
+              >
+                WakaTime
+              </a>
+            </p>
+            <Snowflake className="w-5 h-5 text-blue-400" />
+          </div>
+          <p className="text-white/50 text-sm">
+            Stay productive and track your development journey
           </p>
         </div>
       </div>

@@ -14,7 +14,7 @@ const ComingSoonCard = ({ icon: Icon, title, description, index }: {
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay: index * 0.1 }}
     whileHover={{ y: -5, transition: { duration: 0.2 } }}
-    className="bg-[#101c2c]/60 border border-[#8DD8FF]/50 rounded-xl p-6 backdrop-blur-md hover:border-[#b7e3ff] transition-all duration-300 group"
+    className="bg-[#101c2c]/60 border border-[#8DD8FF]/50 rounded-xl p-6 backdrop-blur-md hover:border-[#8ad8ff] transition-all duration-300 group"
   >
     <div className="flex flex-col items-center text-center space-y-4">
       <div className="p-4 bg-[#8DD8FF]/10 rounded-full group-hover:bg-[#8DD8FF]/20 transition-colors duration-300">
