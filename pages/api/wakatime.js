@@ -7,7 +7,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Cek API key
     const apiKey = process.env.WAKATIME_API_KEY;
     
     if (!apiKey) {
@@ -15,58 +14,29 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'WakaTime API key not configured' });
     }
 
-    console.log('✅ API key found, fetching data...');
+    console.log('✅ API key found');
     
-    // WakaTime menggunakan Basic Auth, bukan Bearer
+    // WakaTime menggunakan Basic Auth
     const authString = Buffer.from(`${apiKey}:`).toString('base64');
-    console.log('Auth string created');
     
-    // Test dengan endpoint user dulu untuk validasi API key
-    console.log('Testing user endpoint first...');
-    const userResponse = await fetch(
-      'https://wakatime.com/api/v1/users/current',
-      {
-        headers: {
-          'Authorization': `Basic ${authString}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    // Ambil summaries langsung
+    console.log('📊 Fetching summaries...');
+    const summariesUrl = 'https://wakatime.com/api/v1/users/current/summaries?range=last_7_days';
     
-    console.log('User endpoint status:', userResponse.status);
-    
-    if (!userResponse.ok) {
-      const userError = await userResponse.text();
-      console.error('❌ User endpoint failed:', userError);
-      return res.status(userResponse.status).json({ 
-        error: `API Key validation failed: ${userResponse.status}`,
-        details: userError
-      });
-    }
-    
-    console.log('✅ User endpoint works, fetching summaries...');
-    
+    const response = await fetch(summariesUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Basic ${authString}`,
+        'Content-Type': 'application/json',
+        'User-Agent': 'NextJS-App/1.0',
+      },
+    });
 
-    const response = await fetch(
-      'https://wakatime.com/api/v1/users/current/summaries?range=last_7_days',
-      {
-        headers: {
-          'Authorization': `Basic ${authString}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    console.log('Request sent to WakaTime API');
     console.log('Response status:', response.status);
-    console.log('Response headers:', response.headers);
 
     if (!response.ok) {
-      console.error('❌ WakaTime API error:', response.status, response.statusText);
-      
-      // Coba baca error message dari response
       const errorText = await response.text();
-      console.error('Error response body:', errorText);
+      console.error('❌ WakaTime API error:', response.status, errorText);
       
       return res.status(response.status).json({ 
         error: `WakaTime API error: ${response.status}`,
@@ -75,12 +45,25 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json();
-    console.log('✅ Data received from WakaTime');
+    console.log('✅ Data received from WakaTime:');
+    console.log('- Data keys:', Object.keys(data));
+    console.log('- Data.data length:', data.data?.length || 0);
+    console.log('- Full structure:', JSON.stringify(data, null, 2));
     
-    return res.status(200).json(data);
+    if (data.data && data.data.length > 0) {
+      console.log('- Sample day:', JSON.stringify(data.data[0], null, 2));
+    } else {
+      console.log('- No data.data or empty array');
+    }
+    
+    // PERBAIKAN UTAMA: Return data dalam format yang diharapkan frontend
+    return res.status(200).json(data); // Return data langsung, bukan dalam wrapper
     
   } catch (error) {
-    console.error('❌ Error fetching WakaTime data:', error);
-    return res.status(500).json({ error: 'Failed to fetch WakaTime data' });
+    console.error('❌ Unexpected error:', error);
+    return res.status(500).json({ 
+      error: 'Failed to fetch WakaTime data',
+      details: error.message
+    });
   }
 }
