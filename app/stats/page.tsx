@@ -180,7 +180,7 @@ const StatCard = ({
 
 const StatsOverview = ({ totalSeconds }: { totalSeconds: number }) => (
   <div className="text-center mb-16">
-    <div className="inline-flex items-center gap-6 bg-white/5 backdrop-blur-xl rounded-3xl p-10 border border-white/10 hover:border-white/20 transition-all duration-300 group">
+    <div className="inline-flex items-center gap-6 bg-[#101c2c]/40 backdrop-blur-xl rounded-3xl p-10 border border-[#8dd8ff]/60 hover:border-[#8dd8ff] transition-all duration-300 group">
       <div className="p-4 bg-gradient-to-br from-cyan-400/20 to-blue-500/20 rounded-2xl backdrop-blur-sm border border-cyan-400/20 group-hover:scale-105 transition-transform duration-300">
         <Clock className="w-12 h-12 text-cyan-300" />
       </div>

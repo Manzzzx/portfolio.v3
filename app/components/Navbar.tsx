@@ -24,7 +24,7 @@ const MENU_ITEMS = [
   { name: "Home", href: "/", icon: FaHome },
   { name: "Projects", href: "/projects", icon: FaCode },
   { name: "Stats", href: "/stats", icon: FaChartBar },
-  { name: "Social", href: "/#social", icon: TiMessages },
+  { name: "Social", href: "/social", icon: TiMessages },
 ] as const;
 
 const Navbar = () => {
