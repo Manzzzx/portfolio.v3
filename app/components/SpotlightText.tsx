@@ -29,9 +29,6 @@ export function SpotlightText() {
         <h1 className="text-4xl md:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-40 to-neutral-200 bg-opacity-50">
           Hi, I&apos;m Manzzx
         </h1>
-        <p className="mt-4 font-normal text-base text-blue-200 max-w-lg text-center mx-auto">
-          <i>Vibe Coder</i>
-        </p>
       </div>
     </div>
   );

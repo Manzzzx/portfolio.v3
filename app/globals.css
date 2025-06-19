@@ -228,3 +228,63 @@
     @apply bg-background text-foreground;
   }
 }
+
+.glitch-text {
+  color: #3a5e7c;
+  position: relative;
+  font-family: inherit;
+  text-shadow:
+    0 0 8px #274b63,
+    0 0 16px #3a5e7c,
+    0 0 24px #8dd8ff;
+}
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.glitch-text::before {
+  top: 0;
+  color: #5ab7d8;
+  z-index: 1;
+  opacity: 0.5;
+  text-shadow: 2px 0 #274b63, 0 2px #8dd8ff;
+  animation: glitchTopWinterDark 1.8s infinite linear alternate-reverse;
+}
+.glitch-text::after {
+  top: 0;
+  color: #8dd8ff;
+  z-index: 2;
+  opacity: 0.3;
+  text-shadow: -2px 0 #274b63, 0 -2px #5ab7d8;
+  animation: glitchBottomWinterDark 1.8s infinite linear alternate-reverse;
+}
+@keyframes glitchTopWinterDark {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-1.5px, -1.5px); }
+  40% { transform: translate(-1.5px, 1.5px); }
+  60% { transform: translate(1.5px, -1px); }
+  80% { transform: translate(1.5px, 1px); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes glitchBottomWinterDark {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(1.5px, 1.5px); }
+  40% { transform: translate(1.5px, -1.5px); }
+  60% { transform: translate(-1.5px, 1px); }
+  80% { transform: translate(-1.5px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+
+.neon-text {
+  color: #3a5e7c;
+  text-shadow:
+    0 0 8px #274b63,
+    0 0 16px #3a5e7c,
+    0 0 24px #8dd8ff;
+}
