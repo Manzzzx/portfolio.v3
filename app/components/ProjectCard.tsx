@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   FaGithub, 
   FaExternalLinkAlt, 
-  FaCode, 
   FaCalendarAlt,
   FaUsers,
   FaStar,
@@ -150,7 +149,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
             <div className="absolute inset-0 bg-gradient-to-br from-[#8DD8FF]/20 to-[#5ab7d8]/20 animate-pulse" />
           )}
           
-          {/* Overlay with actions */}
           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
             {project.demoUrl && (
               <motion.button
@@ -175,9 +173,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
           </div>
         </div>
 
-        {/* Project Content */}
         <div className="p-6">
-          {/* Header */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
@@ -194,7 +190,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
             </div>
           </div>
 
-          {/* Technologies */}
           <div className="flex flex-wrap gap-2 mb-4">
             {project.technologies.slice(0, 4).map((tech) => {
               const Icon = techIcons[tech];
@@ -242,7 +237,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
             </div>
           )}
 
-          {/* Timeline */}
           <div className="flex items-center gap-2 mb-6 text-xs text-white/60">
             <FaCalendarAlt className="w-3 h-3" />
             <span>{project.timeline.started}</span>
@@ -250,7 +244,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
             <span>{project.timeline.duration}</span>
           </div>
 
-          {/* Actions */}
           <div className="flex gap-3">
             {project.githubUrl && (
               <a
@@ -278,7 +271,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
         </div>
       </motion.div>
 
-      {/* Expanded Modal */}
       <AnimatePresence>
         {isExpanded && (
           <ProjectModal 
@@ -288,7 +280,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
         )}
       </AnimatePresence>
 
-      {/* Demo Modal */}
       <AnimatePresence>
         {showDemo && project.demoUrl && (
           <DemoModal 
@@ -301,7 +292,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
   );
 };
 
-// Project Modal Component
 const ProjectModal: React.FC<{ project: Project; onClose: () => void }> = ({ project, onClose }) => {
   return (
     <motion.div
@@ -319,7 +309,6 @@ const ProjectModal: React.FC<{ project: Project; onClose: () => void }> = ({ pro
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-8">
-          {/* Header */}
           <div className="flex items-start justify-between mb-6">
             <div>
               <h2 className="text-3xl font-bold text-white mb-2">{project.title}</h2>
@@ -333,7 +322,6 @@ const ProjectModal: React.FC<{ project: Project; onClose: () => void }> = ({ pro
             </button>
           </div>
 
-          {/* Project Image */}
           <div className="relative h-64 mb-8 rounded-xl overflow-hidden">
             <Image
               src={project.image}
@@ -343,9 +331,7 @@ const ProjectModal: React.FC<{ project: Project; onClose: () => void }> = ({ pro
             />
           </div>
 
-          {/* Details Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            {/* Features */}
             <div>
               <h3 className="text-xl font-bold text-white mb-4">Key Features</h3>
               <ul className="space-y-2">
@@ -358,7 +344,6 @@ const ProjectModal: React.FC<{ project: Project; onClose: () => void }> = ({ pro
               </ul>
             </div>
 
-            {/* Technologies */}
             <div>
               <h3 className="text-xl font-bold text-white mb-4">Technologies Used</h3>
               <div className="flex flex-wrap gap-2">
@@ -380,7 +365,6 @@ const ProjectModal: React.FC<{ project: Project; onClose: () => void }> = ({ pro
             </div>
           </div>
 
-          {/* Challenges & Learnings */}
           {(project.challenges || project.learnings) && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               {project.challenges && (
@@ -413,7 +397,6 @@ const ProjectModal: React.FC<{ project: Project; onClose: () => void }> = ({ pro
             </div>
           )}
 
-          {/* Actions */}
           <div className="flex gap-4">
             {project.githubUrl && (
               <a
@@ -444,7 +427,6 @@ const ProjectModal: React.FC<{ project: Project; onClose: () => void }> = ({ pro
   );
 };
 
-// Demo Modal Component
 const DemoModal: React.FC<{ project: Project; onClose: () => void }> = ({ project, onClose }) => {
   return (
     <motion.div
@@ -462,7 +444,6 @@ const DemoModal: React.FC<{ project: Project; onClose: () => void }> = ({ projec
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6 h-full flex flex-col">
-          {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold text-white">Live Demo - {project.title}</h3>
             <button
@@ -473,7 +454,6 @@ const DemoModal: React.FC<{ project: Project; onClose: () => void }> = ({ projec
             </button>
           </div>
 
-          {/* Demo Frame */}
           <div className="flex-1 rounded-xl overflow-hidden border border-white/20">
             <iframe
               src={project.demoUrl}

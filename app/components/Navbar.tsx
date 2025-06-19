@@ -33,7 +33,6 @@ const Navbar = () => {
   const [show, setShow] = useState(false);
   const pathname = usePathname();
 
-  // Optimized scroll handler with throttling
   const handleScroll = useCallback(() => {
     const scrollY = window.scrollY;
     const isScrolled = scrollY > 10;
@@ -42,7 +41,6 @@ const Navbar = () => {
       setScrolled(isScrolled);
     }
 
-    // Show navbar logic for home page
     if (pathname === "/") {
       const skillSection = document.getElementById("skills");
 
@@ -52,7 +50,6 @@ const Navbar = () => {
         const shouldShow = rect.top < viewportHeight * 0.8;
         setShow(shouldShow);
       } else {
-        // Fallback: show after 25% scroll
         const documentHeight = document.documentElement.scrollHeight;
         const windowHeight = window.innerHeight;
         const scrollPercentage = scrollY / (documentHeight - windowHeight);
@@ -63,16 +60,15 @@ const Navbar = () => {
     }
   }, [pathname, scrolled]);
 
-  // Scroll event listener with cleanup
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
     const throttledHandleScroll = () => {
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(handleScroll, 16); // ~60fps
+      timeoutId = setTimeout(handleScroll, 16);
     };
 
-    handleScroll(); // Initial call
+    handleScroll();
     window.addEventListener("scroll", throttledHandleScroll, { passive: true });
 
     return () => {
@@ -81,7 +77,6 @@ const Navbar = () => {
     };
   }, [handleScroll]);
 
-  // Sync active menu with URL
   useEffect(() => {
     const activeMenuItem = MENU_ITEMS.find((item) => {
       if (item.href === "/") return pathname === "/";

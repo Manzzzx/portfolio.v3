@@ -1,12 +1,10 @@
 import React, { useEffect } from "react";
 import { motion, stagger, useAnimate } from "framer-motion";
 
-// Utility function for combining class names
 function cn(...inputs: (string | undefined | null | false)[]): string {
   return inputs.filter(Boolean).join(" ");
 }
 
-// TextGenerateEffect Component
 export const TextGenerateEffect = ({
   words,
   className,
@@ -72,7 +70,6 @@ export const TextGenerateEffect = ({
   );
 };
 
-// Complete About Me Section
 export default function AboutMeSection() {
   const paragraph1 = `I'm just a college student with a weird hobby of building websites that sometimes confuse people (but that's what makes it fun, right?). As someone who is still in the "learning by breaking things" phase, I love experimenting with code until I accidentally create something completely different from my original plan - but that's what makes it unexpected and interesting!(｡♥‿♥｡)`;
 
