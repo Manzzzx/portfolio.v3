@@ -214,7 +214,7 @@ export default function ProjectsPage() {
           <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
-              animate={{ width: "65%" }}
+              animate={{ width: "45%" }}
               transition={{ duration: 2, delay: 1.6, ease: "easeOut" }}
               className="h-full bg-gradient-to-r from-[#8DD8FF] to-[#5ab7d8] rounded-full relative"
             >
@@ -222,7 +222,7 @@ export default function ProjectsPage() {
             </motion.div>
           </div>
           <p className="text-blue-100/60 text-sm mt-2 text-center">
-            Projects are 65% ready for showcase
+            Projects are 45% ready for showcase
           </p>
         </motion.div>
 

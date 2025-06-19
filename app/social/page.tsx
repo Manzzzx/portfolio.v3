@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { FaGithub, FaInstagram, FaDiscord } from "react-icons/fa";
 import { Spotlight } from "../components/ui/spotlight-new";
 import { useEffect, useState } from "react";
+import { SOCIAL_LINKS } from "@/lib/constant";
 
 interface SocialCardProps {
   icon: React.ReactNode;
@@ -15,6 +16,30 @@ interface SocialCardProps {
   gradient: string;
   hoverColor: string;
 }
+
+const ICON_MAP: Record<string, React.ReactNode> = {
+  github: <FaGithub />,
+  instagram: <FaInstagram />,
+  discord: <FaDiscord />,
+};
+
+const GRADIENT_MAP: Record<string, string> = {
+  github: "bg-gradient-to-br from-gray-600 to-gray-800",
+  instagram: "bg-gradient-to-br from-pink-500 via-purple-500 to-orange-500",
+  discord: "bg-gradient-to-br from-indigo-500 to-purple-600",
+};
+
+const HOVER_COLOR_MAP: Record<string, string> = {
+  github: "text-gray-300 group-hover:text-white",
+  instagram: "text-pink-300 group-hover:text-pink-200",
+  discord: "text-indigo-300 group-hover:text-indigo-200",
+};
+
+const USERNAME_MAP: Record<string, string> = {
+  github: "Manzzzx",
+  instagram: "manzzzx",
+  discord: "manzzzx",
+};
 
 const SocialCard: React.FC<SocialCardProps> = ({
   icon,
@@ -37,15 +62,13 @@ const SocialCard: React.FC<SocialCardProps> = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="relative overflow-hidden rounded-2xl border bg-[#101c2c]/40 backdrop-blur-md p-8 h-full transition-all duration-300 border-[#8dd8ff]/60 hover:border-[#8dd8ff] hover:bg-[#101c2c]/60">
+      <div className={`relative overflow-hidden rounded-2xl border bg-[#101c2c]/40 backdrop-blur-md p-8 h-full transition-all duration-300 border-[#8dd8ff]/60 hover:border-[#8dd8ff] hover:bg-[#101c2c]/60`}>
         {/* Background gradient effect */}
         <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 ${gradient}`} />
-        
         {/* Icon */}
         <div className={`mb-6 text-4xl ${hoverColor} transition-all duration-300 group-hover:scale-110`}>
           {icon}
         </div>
-        
         {/* Content */}
         <div className="relative z-10">
           <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors duration-300">
@@ -58,7 +81,6 @@ const SocialCard: React.FC<SocialCardProps> = ({
             {description}
           </p>
         </div>
-        
         {/* Hover effect overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%]" />
       </div>
@@ -76,35 +98,16 @@ export default function SocialPage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const socialLinks = [
-    {
-      icon: <FaGithub />,
-      title: "GitHub",
-      username: "Manzzzx",
-      description: " ",
-      link: "https://github.com/Manzzzx",
-      gradient: "bg-gradient-to-br from-gray-600 to-gray-800",
-      hoverColor: "text-gray-300 group-hover:text-white"
-    },
-    {
-      icon: <FaInstagram />,
-      title: "Instagram",
-      username: "manzzzx",
-      description: " ",
-      link: "https://instagram.com/",
-      gradient: "bg-gradient-to-br from-pink-500 via-purple-500 to-orange-500",
-      hoverColor: "text-pink-300 group-hover:text-pink-200"
-    },
-    {
-      icon: <FaDiscord />,
-      title: "Discord",
-      username: "manzzzx",
-      description: " ",
-      link: "https://discord.com/",
-      gradient: "bg-gradient-to-br from-indigo-500 to-purple-600",
-      hoverColor: "text-indigo-300 group-hover:text-indigo-200"
-    }
-  ];
+  // Refactor: ambil dari constant dan mapping property tambahan
+  const socialLinks = SOCIAL_LINKS.map((item) => ({
+    icon: ICON_MAP[item.icon] || <FaGithub />,
+    title: item.name,
+    username: USERNAME_MAP[item.icon] || "-",
+    description: " ",
+    link: item.url,
+    gradient: GRADIENT_MAP[item.icon] || "",
+    hoverColor: HOVER_COLOR_MAP[item.icon] || "text-gray-300 group-hover:text-white",
+  }));
 
   return (
     <main className="min-h-screen w-full flex flex-col items-center justify-center py-16 px-4 relative">
@@ -121,7 +124,6 @@ export default function SocialPage() {
           gradientThird="radial-gradient(50% 50% at 50% 50%, hsla(210, 100%, 85%, .005) 0, hsla(210, 100%, 45%, .003) 80%, transparent 100%)"
         />
       )}
-      
       {/* Header */}
       <motion.div 
         className="text-center mb-16 relative z-10"
@@ -137,7 +139,6 @@ export default function SocialPage() {
           Whether it&apos;s code, creativity, or just a friendly chat!
         </p>
       </motion.div>
-      
       {/* Social Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full relative z-10">
         {socialLinks.map((social, index) => (
@@ -151,7 +152,6 @@ export default function SocialPage() {
           </motion.div>
         ))}
       </div>
-      
       {/* Bottom CTA */}
       <motion.div 
         className="mt-16 text-center relative z-10"
