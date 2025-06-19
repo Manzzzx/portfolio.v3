@@ -28,7 +28,7 @@ export default function Home() {
         aria-label="Skills section"
       >
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-cyan-100 to-white tracking-tight mb-6 sm:mb-8 text-center">
-          Skills
+          Tech Stack
         </h2>
         <SkillsGrid />
       </section>

@@ -63,13 +63,10 @@ const SocialCard: React.FC<SocialCardProps> = ({
       transition={{ duration: 0.5 }}
     >
       <div className={`relative overflow-hidden rounded-2xl border bg-[#101c2c]/40 backdrop-blur-md p-8 h-full transition-all duration-300 border-[#8dd8ff]/60 hover:border-[#8dd8ff] hover:bg-[#101c2c]/60`}>
-        {/* Background gradient effect */}
         <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 ${gradient}`} />
-        {/* Icon */}
         <div className={`mb-6 text-4xl ${hoverColor} transition-all duration-300 group-hover:scale-110`}>
           {icon}
         </div>
-        {/* Content */}
         <div className="relative z-10">
           <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors duration-300">
             {title}
@@ -81,7 +78,6 @@ const SocialCard: React.FC<SocialCardProps> = ({
             {description}
           </p>
         </div>
-        {/* Hover effect overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%]" />
       </div>
     </motion.a>
@@ -98,7 +94,6 @@ export default function SocialPage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Refactor: ambil dari constant dan mapping property tambahan
   const socialLinks = SOCIAL_LINKS.map((item) => ({
     icon: ICON_MAP[item.icon] || <FaGithub />,
     title: item.name,
@@ -111,7 +106,6 @@ export default function SocialPage() {
 
   return (
     <main className="min-h-screen w-full flex flex-col items-center justify-center py-16 px-4 relative">
-      {/* Background Spotlight Effect */}
       {!isMobile && (
         <Spotlight
           width={600}
@@ -124,7 +118,6 @@ export default function SocialPage() {
           gradientThird="radial-gradient(50% 50% at 50% 50%, hsla(210, 100%, 85%, .005) 0, hsla(210, 100%, 45%, .003) 80%, transparent 100%)"
         />
       )}
-      {/* Header */}
       <motion.div 
         className="text-center mb-16 relative z-10"
         initial={{ opacity: 0, y: -20 }}
@@ -139,7 +132,6 @@ export default function SocialPage() {
           Whether it&apos;s code, creativity, or just a friendly chat!
         </p>
       </motion.div>
-      {/* Social Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full relative z-10">
         {socialLinks.map((social, index) => (
           <motion.div
@@ -152,7 +144,6 @@ export default function SocialPage() {
           </motion.div>
         ))}
       </div>
-      {/* Bottom CTA */}
       <motion.div 
         className="mt-16 text-center relative z-10"
         initial={{ opacity: 0 }}
