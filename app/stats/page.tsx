@@ -304,7 +304,7 @@ export default function WakaTimeAnalytics() {
             </div>
           </div>
           <p className="text-white/70 text-xl font-medium max-w-2xl mx-auto leading-relaxed">
-            Your comprehensive coding activity insights and development statistics
+            My comprehensive coding activity insights and development statistics
           </p>
         </div>
 

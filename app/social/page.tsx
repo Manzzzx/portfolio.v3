@@ -37,8 +37,8 @@ const HOVER_COLOR_MAP: Record<string, string> = {
 
 const USERNAME_MAP: Record<string, string> = {
   github: "Manzzzx",
-  instagram: "manzzzx",
-  discord: "manzzzx",
+  instagram: "m4nzzt",
+  discord: "Manzzzx",
 };
 
 const SocialCard: React.FC<SocialCardProps> = ({

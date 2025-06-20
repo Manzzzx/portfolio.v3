@@ -15,7 +15,7 @@ export const SOCIAL_LINKS = [
   },
   {
     name: "Instagram",
-    url: "https://instagram.com/manzzzx",
+    url: "https://instagram.com/m4nzzt",
     icon: "instagram",
   },
   {

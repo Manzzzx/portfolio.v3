@@ -37,13 +37,13 @@ export default function SocialSection() {
     {
       icon: <FaGithub />,
       title: "GitHub",
-      link: "https://github.com",
+      link: "https://github.com/Manzzzx",
       hoverColor: "text-gray-300 group-hover:text-white"
     },
     {
       icon: <FaInstagram />,
       title: "Instagram",
-      link: "https://instagram.com",
+      link: "https://instagram.com/m4nzzt",
       hoverColor: "text-pink-300 group-hover:text-pink-200"
     },
     {
