@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { Clock, Code, Monitor, Layers, Award, Snowflake } from "lucide-react";
 
-// Types
 type WakaTimeData = {
   name: string;
   total_seconds: number;
@@ -30,7 +29,6 @@ type AggregatedData = {
   total_seconds: number;
 };
 
-// Winter color palette
 const COLOR_PALETTE = [
   "from-blue-400 to-blue-600",
   "from-cyan-400 to-cyan-600", 
@@ -44,7 +42,6 @@ const COLOR_PALETTE = [
   "from-[#8dd8ff] to-[#5ab7d8]",
 ];
 
-// Utility Functions
 const formatDuration = (seconds: number): string => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
@@ -202,7 +199,6 @@ const StatsOverview = ({ totalSeconds }: { totalSeconds: number }) => (
   </div>
 );
 
-// Custom hooks
 const useWakaTimeData = () => {
   const [summary, setSummary] = useState<WakaTimeSummary | null>(null);
   const [loading, setLoading] = useState(true);
@@ -278,7 +274,6 @@ const useAggregatedData = (summary: WakaTimeSummary | null): AggregatedData => {
   }, [summary]);
 };
 
-// Main component
 export default function WakaTimeAnalytics() {
   const { summary, loading, error } = useWakaTimeData();
   const aggregatedData = useAggregatedData(summary);
@@ -303,15 +298,8 @@ export default function WakaTimeAnalytics() {
               <Snowflake className="w-10 h-10 text-blue-400 animate-spin" style={{animationDuration: '4s'}} />
             </div>
           </div>
-          <p className="text-white/70 text-xl font-medium max-w-2xl mx-auto leading-relaxed">
-            My comprehensive coding activity insights and development statistics
-          </p>
         </div>
-
-        {/* Overview */}
         <StatsOverview totalSeconds={aggregatedData.total_seconds} />
-
-        {/* Stats Grid */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-16">
           <StatCard
             title="Programming Languages"

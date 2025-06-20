@@ -3,7 +3,6 @@
 import { SpotlightText } from "./components/SpotlightText";
 import SkillsGrid from "./components/SkillsGrid";
 import AboutMeSection from "./components/AboutSection";
-import SocialSection from "./components/SocialSection";
 
 export default function Home() {
   return (
@@ -32,9 +31,6 @@ export default function Home() {
         </h2>
         <SkillsGrid />
       </section>
-      
-      {/* Social Section */}
-      <SocialSection />
     </main>
   );
 }

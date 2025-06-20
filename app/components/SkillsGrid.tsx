@@ -39,7 +39,7 @@ const SkillCard: React.FC<SkillCardProps> = ({ title, borderColor, titleColor, c
   <div className={`rounded-2xl border ${borderColor} p-6 bg-[#101c2c]/40 backdrop-blur-md h-full`}>
     <h3 className={`text-lg font-bold ${titleColor} mb-6 flex items-center gap-2`}>
       {title}
-      <span className="text-xs">✨</span>
+      <span className="text-xs">❄️</span>
     </h3>
     <div className="flex flex-wrap gap-4 justify-start">
       {children}
