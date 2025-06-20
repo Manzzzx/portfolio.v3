@@ -5,6 +5,7 @@ import { BackgroundBeamsWithCollision } from "./components/ui/background-beams-w
 import SnowParticles from "./components/SnowParticles";
 import Image from "next/image";
 import Navbar from "./components/Navbar";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -66,6 +67,7 @@ export default function RootLayout({
         {/* Main Content */}
         <div className="relative z-10">
           {children}
+          <Analytics/>
         </div>
       </body>
     </html>
