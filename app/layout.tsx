@@ -6,6 +6,7 @@ import SnowParticles from "./components/SnowParticles";
 import Image from "next/image";
 import Navbar from "./components/Navbar";
 import { Analytics } from "@vercel/analytics/next";
+import { APP_CONFIG } from "@/lib/config/app.config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,8 +21,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "マンヅ",
-  description: "Vibe Coder",
+  title: APP_CONFIG.site.title,
+  description: APP_CONFIG.site.description,
 };
 
 const Logo = () => (

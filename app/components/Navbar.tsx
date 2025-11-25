@@ -1,38 +1,48 @@
+/**
+ * Navbar Component
+ * 
+ * Bottom navigation bar dengan scroll-based visibility.
+ * Updated to use centralized configuration.
+ * 
+ * @module app/components/Navbar
+ */
+
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { FaCode, FaHome, FaChartBar } from "react-icons/fa";
-import { TiMessages } from "react-icons/ti";
+import { APP_CONFIG } from "@/lib/config/app.config";
+import { THEME_CONFIG } from "@/lib/config/theme.config";
 
-// Constants
-const THEME = {
-  colors: {
-    nav: "#b7d6f7",
-    border: "#8DD8FF",
-    activeLine: "#b7e3ff",
-    background: "#1a2333/60",
-  },
-  breakpoints: {
-    mobile: 640,
-  },
-} as const;
-
-const MENU_ITEMS = [
-  { name: "Home", href: "/", icon: FaHome },
-  { name: "Projects", href: "/projects", icon: FaCode },
-  { name: "Stats", href: "/stats", icon: FaChartBar },
-  { name: "Social", href: "/social", icon: TiMessages },
-] as const;
-
+/**
+ * Navbar Component
+ * 
+ * Features:
+ * - Scroll-based visibility (shows after scrolling 25%)
+ * - Active route highlighting
+ * - Smooth animations
+ * - Responsive design
+ * - Keyboard accessible
+ * 
+ * Uses centralized configuration from:
+ * - APP_CONFIG.navigation untuk menu items
+ * - THEME_CONFIG.colors untuk theming
+ */
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [activeItem, setActiveItem] = useState<string>("Home");
   const [show, setShow] = useState(false);
   const pathname = usePathname();
 
+  // Get menu items from centralized config
+  const MENU_ITEMS = APP_CONFIG.navigation;
+
+  /**
+   * Handle scroll event
+   * Shows navbar after scrolling past 25% of page or reaching skills section
+   */
   const handleScroll = useCallback(() => {
     const scrollY = window.scrollY;
     const isScrolled = scrollY > 10;
@@ -60,12 +70,15 @@ const Navbar = () => {
     }
   }, [pathname, scrolled]);
 
+  /**
+   * Setup scroll listener dengan throttling
+   */
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
     const throttledHandleScroll = () => {
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(handleScroll, 16);
+      timeoutId = setTimeout(handleScroll, 16); // ~60fps
     };
 
     handleScroll();
@@ -77,6 +90,9 @@ const Navbar = () => {
     };
   }, [handleScroll]);
 
+  /**
+   * Update active item based on current route
+   */
   useEffect(() => {
     const activeMenuItem = MENU_ITEMS.find((item) => {
       if (item.href === "/") return pathname === "/";
@@ -86,12 +102,18 @@ const Navbar = () => {
     if (activeMenuItem) {
       setActiveItem(activeMenuItem.name);
     }
-  }, [pathname]);
+  }, [pathname, MENU_ITEMS]);
 
+  /**
+   * Handle menu item click
+   */
   const handleMenuClick = useCallback((itemName: string) => {
     setActiveItem(itemName);
   }, []);
 
+  /**
+   * Handle keyboard navigation
+   */
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent, itemName: string) => {
       if (e.key === "Enter" || e.key === " ") {
@@ -121,7 +143,7 @@ const Navbar = () => {
               "bg-[#1a2333]/60"
             )}
             style={{
-              borderColor: THEME.colors.border,
+              borderColor: THEME_CONFIG.colors.border.primary,
               boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
             }}
           >
@@ -136,7 +158,7 @@ const Navbar = () => {
                     href={item.href}
                     tabIndex={0}
                     role="menuitem"
-                    aria-label={`Navigate to ${item.name}`}
+                    aria-label={item.ariaLabel}
                     aria-current={isActive ? "page" : undefined}
                     onClick={() => handleMenuClick(item.name)}
                     onKeyDown={(e) => handleKeyDown(e, item.name)}
@@ -148,7 +170,7 @@ const Navbar = () => {
                         : "hover:opacity-80 hover:bg-white/5"
                     )}
                     style={{
-                      color: isActive ? THEME.colors.activeLine : THEME.colors.nav,
+                      color: isActive ? THEME_CONFIG.colors.nav.active : THEME_CONFIG.colors.nav.default,
                       minWidth: "40px",
                       minHeight: "40px",
                     }}
@@ -161,7 +183,7 @@ const Navbar = () => {
                         <motion.div
                           layoutId="activeItemLine"
                           className="absolute left-1/2 -translate-x-1/2 -bottom-0.5 w-6 h-1 rounded-full"
-                          style={{ backgroundColor: THEME.colors.activeLine }}
+                          style={{ backgroundColor: THEME_CONFIG.colors.nav.active }}
                           initial={{ opacity: 0, scaleX: 0.5 }}
                           animate={{ opacity: 1, scaleX: 1 }}
                           exit={{ opacity: 0, scaleX: 0.5 }}
